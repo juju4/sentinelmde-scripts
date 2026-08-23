@@ -1,0 +1,93 @@
+---
+# SPDX-FileCopyrightText: 2025 The python_openobserve authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+      - id: check-json
+      - id: pretty-format-json
+        args:
+          - "--autofix"
+          - "--indent=1"
+          - "--no-sort-keys"
+      - id: detect-private-key
+      - id: check-case-conflict
+      - id: requirements-txt-fixer
+      - id: check-ast
+      - id: check-shebang-scripts-are-executable
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      # - id: detect-aws-credentials
+      - id: check-docstring-first
+  - repo: https://github.com/psf/black
+    rev: 26.5.1
+    hooks:
+      - id: black
+  - repo: https://github.com/PyCQA/pylint
+    rev: v4.0.7
+    hooks:
+      - id: pylint
+        additional_dependencies: ["httpx", "sqlglot", "pandas", "pytest", "jmespath", "python-dotenv", "polars", "hypothesis"]
+        args: [
+                  # E1101: Instance of 'LookupDict' has no 'ok' member (no-member)
+                  '--generated-member=httpx.codes.ok'
+              ]
+  # https://github.com/python/mypy/issues/13916
+  # https://jaredkhan.com/blog/mypy-pre-commit
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.3.1  # 1.15.0
+    hooks:
+      - id: mypy
+        language: system
+        pass_filenames: false
+        args: ['.']
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.4
+    hooks:
+      - id: bandit
+        args: ["-c", "pyproject.toml"]
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+      - id: codespell
+        args: [-I, .codespellignore]
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        # exclude: .*/tests/.*
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.39
+    hooks:
+      - id: pymarkdown
+        args:
+          - -d
+          - MD013
+          - scan
+  - repo: https://github.com/tcort/markdown-link-check
+    rev: v3.15.0
+    hooks:
+      - id: markdown-link-check
+        args: [-q]
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v6.2.0
+    hooks:
+      - id: reuse-lint-file
+  - repo: local
+    hooks:
+      - id: trufflehog
+        name: TruffleHog
+        description: Detect secrets in your data.
+        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail --no-update'
+        # For running trufflehog in docker, use the following entry instead:
+        # entry: bash -c 'docker run --rm -v "$(pwd):/workdir" -i --rm trufflesecurity/trufflehog:latest git file:///workdir --since-commit HEAD --only-verified --fail'
+        language: system
+        stages: ["pre-commit", "pre-push"]

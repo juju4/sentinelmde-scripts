@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2026 The sentinelmde-scripts authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+
+[tool.bandit.assert_used]
+# FIXME! not working
+skips = ['tests/*/test_*.py']
+[tool.bandit]
+exclude_dirs = ["tests"]

@@ -1,0 +1,60 @@
+---
+# https://github.com/Azure/PSDocs.Azure
+# Example: .azure-pipelines/psdocs-blobstorage.yaml
+# SPDX-FileCopyrightText: 2026 Azure/PSDocs.Azure authors
+# SPDX-License-Identifier: MIT
+
+jobs:
+- job: 'generate_arm_template_documentation'
+  displayName: 'Generate ARM template docs'
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  # STEP 1: Generate Markdowns using PSDocs
+  - powershell: |
+      Install-Module -Name 'PSDocs.Azure' -Repository PSGallery -force;
+        # Scan for Azure template file recursively in the templates/ directory
+        Get-AzDocTemplateFile -Path templates/ | ForEach-Object {
+        # Generate a standard name of the markdown file. i.e. <name>_<version>.md
+        $template = Get-Item -Path $_.TemplateFile;
+        $templateName = $template.Directory.Parent.Name;
+        $version = $template.Directory.Name;
+        $docName = "$($templateName)_$version";
+        # Generate markdown
+        Invoke-PSDocument -Module PSDocs.Azure -OutputPath out/docs/ -InputObject $template.FullName -InstanceName $docName;
+      }
+    displayName: 'Export template data'
+
+  # STEP 2: Copy files to a storage account
+  - task: AzureFileCopy@4
+    displayName: 'Copy files to a storage account blob container'
+    inputs:
+      SourcePath: 'out/docs/*'
+      azureSubscription: 'psdocstest'
+      Destination: 'AzureBlob'
+      storage: '<storageaccountname>'
+      ContainerName: 'ps-docs'
+
+  # https://stackoverflow.com/questions/77803693/publishing-release-notes-to-wiki-during-build-in-ado-pipeline
+  # https://stackoverflow.com/questions/57056375/azure-devops-how-to-edit-wiki-page-via-rest-api
+  # https://github.com/ashamrai/AzureDevOpsExtensions/blob/master/CustomPSTasks/UpdateWikiPage.ps1
+  # alt: https://rick-brown.medium.com/automate-project-documentation-from-azure-devops-to-sharepoint-on-microsoft-365-f2e5b554d6ce
+  - powershell: |
+      $base64Token = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $env:WIKI_PAT)))
+
+      $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+      $headers.Add("Authorization", ("Basic {0}" -f $base64Token))
+      $headers.Add("Content-Type", "application/json")
+
+      $uri = "https://dev.azure.com/$($WIKI_ORG)/$($WIKI_PROJECT)/_apis/wiki/wikis/$(WIKI_NAME)/pages?path=/parent-page-name/sub-page-name&api-version=7.0"
+
+      $content = [IO.File]::ReadAllText("path/to/release-notes.md")
+      $body = @{content = $content} | ConvertTo-Json -Depth 10
+
+      Invoke-RestMethod -Method PUT -Uri $uri -Headers $headers -Body $body
+    displayName: 'Publish to ADO wiki'
+    env:
+      WIKI_PAT: $(ADOWIKI_PAT)
+      WIKI_ORG: $(ADOWIKI_ORG)
+      WIKI_PROJECT: $(ADOWIKI_PROJECT)
+      WIKI_NAME: $(ADOWIKI_NAME)

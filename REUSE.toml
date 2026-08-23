@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The sentinelmde-scripts authors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+version = 1
+
+[[annotations]]
+path = ".secrets.baseline"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 The sentinelmde-scripts authors"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "renovate.json"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 The sentinelmde-scripts authors"
+SPDX-License-Identifier = "GPL-3.0-or-later"
