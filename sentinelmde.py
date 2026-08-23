@@ -14,7 +14,7 @@ import logging
 
 # import datetime
 
-import httpx
+import httpx  # type: ignore
 import pandas
 import jmespath
 import dotenv
