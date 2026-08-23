@@ -32,9 +32,9 @@ jobs:
       shell: pwsh
 
     # STEP 2: Copy files to a storage account
-    - name: Copy files to a storage account
-      uses: bacongobbler/azure-blob-storage-upload@v1.1.1
-      with:
-        connection_string: ${{ secrets.STORAGEACCOUNTSECRET }}
-        container_name: ps-docs
-        source_dir: 'out/docs/*'
+    # - name: Copy files to a storage account
+    #   uses: bacongobbler/azure-blob-storage-upload@v1.1.1
+    #   with:
+    #     connection_string: ${{ secrets.STORAGEACCOUNTSECRET }}
+    #     container_name: ps-docs
+    #     source_dir: 'out/docs/*'
