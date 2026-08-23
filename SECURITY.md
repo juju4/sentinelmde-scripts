@@ -47,7 +47,6 @@ We prefer all communications to be in English.
 
 ## References
 
-* [CNCF template SECURITY.md](https://github.com/cncf/tag-security/blob/main/project-resources/templates/SECURITY.md)
 * [security.txt](https://securitytxt.org/) when applicable website.
 * [Vulnerability Disclosure Cheat Sheet, OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html)
 * [About coordinated disclosure of security vulnerabilities](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/about-coordinated-disclosure-of-security-vulnerabilities)
