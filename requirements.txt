@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2026 The sentinelmde-scripts authors
 # SPDX-License-Identifier: GPL-3.0-or-later
 httpx==0.28.1
+msgraph-sdk==1.61.0
 msticpy==3.0.2
