@@ -50,6 +50,7 @@ class SentinelMDE:
         self.resource_uri = os.getenv("resource_uri", None)
         self.oauth_uri = os.getenv("oauth_uri", None)
 
+        # https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow#get-a-token
         url = f"{self.oauth_uri}/{self.tenant_id}/oauth2/token"
         body = {
             "resource": self.resource_uri,
@@ -59,11 +60,14 @@ class SentinelMDE:
         }
 
         try:
-            response = httpx.post(url, json=body)
+            response = httpx.post(url, data=body)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
         json_response = response.json()
+        if "access_token" not in json_response:
+            logging.error("no access_token in response %s", json_response)
+
         token = json_response["access_token"]
 
         self.headers = {"Authorization": f"Bearer {token}"}
@@ -81,7 +85,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -103,7 +107,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -122,7 +126,7 @@ class SentinelMDE:
         )
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -144,7 +148,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -164,7 +168,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -186,7 +190,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -208,7 +212,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -234,7 +238,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -255,7 +259,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -277,7 +281,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -298,7 +302,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -316,7 +320,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -335,7 +339,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -356,7 +360,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -374,7 +378,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -393,7 +397,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -412,7 +416,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -434,7 +438,7 @@ class SentinelMDE:
         logging.info("url %s", url)
 
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=self.headers)
         except httpx.HTTPError as exc:
             logging.exception("HTTP Error %s", exc)
 
@@ -529,6 +533,7 @@ Events quick view
         # TODO: cost management
         # https://learn.microsoft.com/en-us/rest/api/cost-management/alerts/list?view=rest-cost-management-2026-06-01&tabs=HTTP
         # https://learn.microsoft.com/en-us/rest/api/cost-management/query/usage?view=rest-cost-management-2026-06-01&tabs=HTTP
+        # TODO: permissions changes?
 
         return summary
 
@@ -594,7 +599,7 @@ Events quick view
             max_level=normalize_max_level,
         )
 
-    # pylint: disable=R0912,R0913,R0914,R0915
+    # pylint: disable=R0912,R0913,R0914,R0915,R0911
     def export_objects(
         self,
         subscription_id: str,
@@ -660,6 +665,10 @@ Events quick view
             results = self.get_workflows_byrg(subscription_id, rg_name)
         else:
             logging.exception("Invalid object_type %s", object_type)
+
+        if "value" not in results:  # type: ignore
+            logging.exception("Results has no value field: %s", results)
+            return False
 
         if strip is True:
             # if content too variable or not not needed
